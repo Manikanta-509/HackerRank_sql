@@ -1,0 +1,17 @@
+/*
+Enter your query here.
+Please append a semicolon ";" at the end of the query and enter your query in a single line to avoid error.
+*/
+SELECT 
+    MAX(CASE WHEN occupation = 'Doctor' THEN name ELSE NULL END) AS Doctor,
+    MAX(CASE WHEN occupation = 'Professor' THEN name ELSE NULL END) AS Professor,
+    MAX(CASE WHEN occupation = 'Singer' THEN name ELSE NULL END) AS Singer,
+    MAX(CASE WHEN occupation = 'Actor' THEN name ELSE NULL END) AS Actor
+FROM (
+    SELECT 
+        name, 
+        occupation,
+        ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name ASC) AS rn
+    FROM OCCUPATIONS
+) AS sub
+GROUP BY rn;
