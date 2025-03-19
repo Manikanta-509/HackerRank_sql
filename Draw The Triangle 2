@@ -1,0 +1,8 @@
+with recursive pattern as (
+    select 1 as n, cast('* ' as char(1000)) as stars
+    union all
+    select n + 1, cast(concat(stars, '* ') as char(1000))
+    from pattern
+    where n < 20
+)
+select stars from pattern;
