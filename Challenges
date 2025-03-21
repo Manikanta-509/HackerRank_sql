@@ -1,0 +1,23 @@
+select h.hacker_id, h.name, count(c.challenge_id) as total_challenges
+from hackers h
+join challenges c on h.hacker_id = c.hacker_id
+group by h.hacker_id, h.name
+having total_challenges = (
+    select max(challenge_count)
+    from (
+        select count(challenge_id) as challenge_count
+        from challenges
+        group by hacker_id
+    ) as max_challenges
+)
+or total_challenges in (
+    select challenge_count
+    from (
+        select count(challenge_id) as challenge_count
+        from challenges
+        group by hacker_id
+    ) as counts
+    group by challenge_count
+    having count(*) = 1
+)
+order by total_challenges desc, h.hacker_id;
